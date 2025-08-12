@@ -1,0 +1,45 @@
+const { parseFileContent } = require('../utils/fileParser');
+const { summarizeTextWithLLM } = require('../services/openrouter');
+const AIInteractionService = require('../services/aiInteractionService');
+
+const handleSummarize = async (req, res) => {
+  console.log("test")
+  try {
+    const filePath = req.file.path;
+    const tone = req.body.tone || 'neutral';
+    const originalName = req.file.originalname;
+    const mimeType = req.file.mimetype;
+
+    const content = await parseFileContent(filePath, originalName, mimeType);
+    console.log("📝 Extracted content:", String(content));
+    const summary = await summarizeTextWithLLM(content, tone);
+    console.log(summary)
+
+    // Store AI interaction if user is authenticated
+    if (req.user) {
+      try {
+        await AIInteractionService.storeInteraction(
+          req.user.id,
+          'summarizer',
+          `File: ${originalName}, Tone: ${tone}, Content Length: ${content.length}`,
+          summary,
+          {
+            fileType: mimeType,
+            tone: tone,
+            contentLength: content.length,
+            summaryLength: summary.length
+          }
+        );
+      } catch (trackingError) {
+        console.error('Error tracking AI interaction:', trackingError);
+        // Don't fail the main request if tracking fails
+      }
+    }
+
+    res.json({ summary });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { handleSummarize };
