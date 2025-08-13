@@ -5,6 +5,7 @@ exports.generateQuizFromCode = async (req, res) => {
   const {
     language = "JavaScript",
     type = "mcq",
+    difficulty,
     questionCount = 5,
     topic
   } = req.body;
@@ -16,7 +17,7 @@ exports.generateQuizFromCode = async (req, res) => {
   const prompt = `
   You are an expert software instructor.
   Generate ${questionCount} ${type === "mcq" ? "multiple choice" : "interview-style"} questions 
-  on the topic: "${topic}" in ${language}.
+  on the topic: "${topic}" in ${language} with difficulty level ${difficulty}.
   Make sure questions are clear, relevant, and progressively challenging.
   `;
 
