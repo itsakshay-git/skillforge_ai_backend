@@ -1,5 +1,6 @@
 // controllers/emailAssistantController.js
 const axios = require("axios");
+const AIInteractionService = require("../services/aiInteractionService");
 
 const handleEmailAssist = async (req, res) => {
   const { mode, input, tone = "neutral", recipient = "", context = "" } = req.body;
@@ -9,7 +10,6 @@ const handleEmailAssist = async (req, res) => {
   }
 
   let prompt = "";
-
   if (mode === "write") {
     prompt = `Write a professional email in a ${tone} tone to ${recipient}. The topic or intent of the email is:\n${input}\n\nInclude a subject and keep it clear and concise.`;
   } else if (mode === "reply") {
@@ -36,6 +36,29 @@ const handleEmailAssist = async (req, res) => {
     );
 
     const response = aiResponse.data.choices[0].message.content;
+
+    // Store AI interaction if user is authenticated
+    if (req.user) {
+      try {
+        await AIInteractionService.storeInteraction(
+          req.user.id,
+          "email_assistant",
+          `Mode: ${mode}, Tone: ${tone}, Recipient: ${recipient || "N/A"}, Input length: ${input.length}`,
+          response,
+          {
+            mode,
+            tone,
+            recipient,
+            inputLength: input.length,
+            responseLength: response.length,
+            contextLength: context?.length || 0,
+          }
+        );
+      } catch (trackingError) {
+        console.error("Error tracking AI interaction:", trackingError);
+      }
+    }
+
     res.json({ response });
   } catch (err) {
     console.error("Email Assistant Error:", err?.response?.data || err);

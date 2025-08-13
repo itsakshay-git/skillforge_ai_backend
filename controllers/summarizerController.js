@@ -11,9 +11,7 @@ const handleSummarize = async (req, res) => {
     const mimeType = req.file.mimetype;
 
     const content = await parseFileContent(filePath, originalName, mimeType);
-    console.log("📝 Extracted content:", String(content));
     const summary = await summarizeTextWithLLM(content, tone);
-    console.log(summary)
 
     // Store AI interaction if user is authenticated
     if (req.user) {
