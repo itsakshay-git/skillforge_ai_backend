@@ -3,7 +3,6 @@ const { summarizeTextWithLLM } = require('../services/openrouter');
 const AIInteractionService = require('../services/aiInteractionService');
 
 const handleSummarize = async (req, res) => {
-  console.log("test")
   try {
     const filePath = req.file.path;
     const tone = req.body.tone || 'neutral';
@@ -12,8 +11,7 @@ const handleSummarize = async (req, res) => {
 
     const content = await parseFileContent(filePath, originalName, mimeType);
     const summary = await summarizeTextWithLLM(content, tone);
-
-    // Store AI interaction if user is authenticated
+    
     if (req.user) {
       try {
         await AIInteractionService.storeInteraction(
@@ -30,7 +28,6 @@ const handleSummarize = async (req, res) => {
         );
       } catch (trackingError) {
         console.error('Error tracking AI interaction:', trackingError);
-        // Don't fail the main request if tracking fails
       }
     }
 

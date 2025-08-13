@@ -2,12 +2,10 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const prisma = require('../lib/prisma')
 
-// User Registration
 const register = async (req, res) => {
     try {
         const { username, email, password } = req.body
-
-        // Check if user already exists
+        
         const existingUser = await prisma.user.findFirst({
             where: {
                 OR: [

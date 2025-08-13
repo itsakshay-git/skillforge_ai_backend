@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const { authenticateToken } = require('../middleware/auth')
-const AIInteractionService = require('../services/aiInteractionService')
 const { userHistory, featureUsage, analytics, DeleteUserHistoryById, DeleteAllUserHistory } = require('../controllers/userHistoryController')
 
 

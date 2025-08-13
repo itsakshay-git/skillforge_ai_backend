@@ -1,4 +1,3 @@
-// controllers/emailAssistantController.js
 const axios = require("axios");
 const AIInteractionService = require("../services/aiInteractionService");
 
@@ -36,8 +35,7 @@ const handleEmailAssist = async (req, res) => {
     );
 
     const response = aiResponse.data.choices[0].message.content;
-
-    // Store AI interaction if user is authenticated
+    
     if (req.user) {
       try {
         await AIInteractionService.storeInteraction(

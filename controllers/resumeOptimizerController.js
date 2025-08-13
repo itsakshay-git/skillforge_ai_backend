@@ -1,5 +1,6 @@
-const axios = require("axios");
 const AIInteractionService = require("../services/aiInteractionService");
+const { createOptimizationPrompt } = require("../utils/resumeUtils");
+const { generateWithOpenRouter } = require("../services/llmService");
 
 const resumeOptimizer = async (req, res) => {
     let filePath = null;

@@ -1,4 +1,3 @@
-// controllers/quizController.js
 const axios = require("axios");
 const AIInteractionService = require("../services/aiInteractionService");
 
@@ -15,10 +14,10 @@ exports.generateQuizFromCode = async (req, res) => {
   }
 
   const prompt = `
-You are an expert software instructor.
-Generate ${questionCount} ${type === "mcq" ? "multiple choice" : "interview-style"} questions 
-on the topic: "${topic}" in ${language}.
-Make sure questions are clear, relevant, and progressively challenging.
+  You are an expert software instructor.
+  Generate ${questionCount} ${type === "mcq" ? "multiple choice" : "interview-style"} questions 
+  on the topic: "${topic}" in ${language}.
+  Make sure questions are clear, relevant, and progressively challenging.
   `;
 
   try {

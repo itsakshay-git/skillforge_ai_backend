@@ -1,4 +1,3 @@
-// controllers/explainController.js
 const axios = require("axios");
 const AIInteractionService = require("../services/aiInteractionService");
 
